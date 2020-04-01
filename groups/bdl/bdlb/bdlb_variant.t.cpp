@@ -616,6 +616,10 @@ class TestString {
     }
 
     // MANIPULATORS
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    TestString& operator=(const TestString& other) = default;
+#endif
+
     TestString& operator=(const bsl::string& value)
     {
         d_value = value;
@@ -953,6 +957,12 @@ struct Copyable {
     {
         s_copyConstructorCalled = true;
     }
+
+    // MANIPULATORS
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    Copyable& operator=(const Copyable& other) = default;
+#endif
+
 };
 
 // PUBLIC CLASS DATA

@@ -32,6 +32,7 @@
 #include <bslmf_assert.h>
 
 #include <bsls_atomic.h>
+#include <bsls_compilerfeatures.h>
 #include <bsls_nameof.h>
 #include <bsls_objectbuffer.h>
 #include <bsls_types.h>
@@ -40,15 +41,14 @@
 #include <bsltf_streamutil.h>
 
 #include <bsl_algorithm.h>
-#include <bsl_list.h>
-#include <bsl_string.h>
-
 #include <bsl_cerrno.h>
 #include <bsl_climits.h>
 #include <bsl_cstdio.h>
 #include <bsl_cstdlib.h>
 #include <bsl_cstring.h>
 #include <bsl_iostream.h>
+#include <bsl_list.h>
+#include <bsl_string.h>
 
 using namespace BloombergLP;
 using bsl::cout;
@@ -140,10 +140,10 @@ void aSsErT(int c, const char *s, int i)
 
 namespace {
 
-int verbose;
-int veryVerbose;
-int veryVeryVerbose;
-int veryVeryVeryVerbose;
+bool             verbose;
+bool         veryVerbose;
+bool     veryVeryVerbose;
+bool veryVeryVeryVerbose;
 
 // Struct 'Element' is used in many examples, it behaves similarly to a double,
 // but it also keeps track of the number instances of it in existence, useful
@@ -151,7 +151,7 @@ int veryVeryVeryVerbose;
 
 struct Element {
     static bsls::AtomicInt s_allocCount;
-    double                d_data;
+    double                 d_data;
 
     Element()
     {
@@ -173,6 +173,10 @@ struct Element {
     {
         --s_allocCount;
     }
+
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    Element& operator=(const Element& other) = default;
+#endif
 
     operator double() const
     {
@@ -1314,18 +1318,17 @@ struct PushPoint {
 
 int main(int argc, char *argv[])
 {
-    int test = argc > 1 ? bsl::atoi(argv[1]) : 0;
-
-    verbose = argc > 2;
-    veryVerbose = argc > 3;
-    veryVeryVerbose = argc > 4;
+    int            test = argc > 1 ? bsl::atoi(argv[1]) : 0;
+                verbose = argc > 2;
+            veryVerbose = argc > 3;
+        veryVeryVerbose = argc > 4;
     veryVeryVeryVerbose = argc > 5;
 
     cout << "TEST " << __FILE__ << " CASE " << test << endl;
 
     bslma::TestAllocator taDefault(veryVeryVeryVerbose);
     bslma::TestAllocator ta(veryVeryVeryVerbose);  // passed to
-                                                  // multipriority queue
+                                                   // multipriority queue
 
     bslma::DefaultAllocatorGuard guard(&taDefault);
 

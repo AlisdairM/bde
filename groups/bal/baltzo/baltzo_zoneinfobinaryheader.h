@@ -156,6 +156,7 @@ BSLS_IDENT("$Id: $")
 #include <balscm_version.h>
 
 #include <bsls_assert.h>
+#include <bsls_compilerfeatures.h>
 #include <bsls_review.h>
 
 #include <bsl_algorithm.h>
@@ -261,14 +262,20 @@ class ZoneinfoBinaryHeader {
                          int  numTransitions,
                          int  numLocalTimeTypes,
                          int  abbrevDataSize);
-        // Create a 'ZoneinfoBinaryHeader' having the specified 'version',
-        // 'numIsGmt', 'numIsStd', 'numLeaps', 'numTransitions',
-        // 'numLocalTimeTypes', and 'abbrevDataSize' values.  The behavior is
-        // undefined unless '0 == version || 50 == version || 51 == version',
+	// Create a 'ZoneinfoBinaryHeader' object having the specified
+	// 'version', 'numIsGmt', 'numIsStd', 'numLeaps', 'numTransitions',
+	// 'numLocalTimeTypes', and 'abbrevDataSize' values.  The behavior is
+	// undefined unless '0 == version || 50 == version || 51 == version',
         // '0 <= numIsGmt', '0 <= numIsStd', '0 == numLeaps',
         // '0 <= numTransitions', '1 <= numLocalTimeTypes', and
         // '1 <= abbrevDataSize'.  Note that 50 is the value of ASCII
         // character '2' and 51 is the value of ASCII character '3'.
+
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    ZoneinfoBinaryHeader(const ZoneinfoBinaryHeader& original) = default;
+	// Create a 'ZoneinfoBinaryHeader' object having the same value as the
+	// specified 'original' object.
+#endif
 
     ~ZoneinfoBinaryHeader();
         // Destroy this object.

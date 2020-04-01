@@ -280,8 +280,8 @@ class CalendarReverseIteratorAdapter {
         // Destroy this 'CalendarReverseIteratorAdapter' object.
 
     // MANIPULATORS
-    CalendarReverseIteratorAdapter& operator=(
-                                    const CalendarReverseIteratorAdapter& rhs);
+//! CalendarReverseIteratorAdapter& operator=(
+//!                       const CalendarReverseIteratorAdapter& rhs) = default;
         // Assign the value of the specified 'rhs' to this object, and return a
         // reference providing modifiable access to this object.
 
@@ -388,16 +388,6 @@ CalendarReverseIteratorAdapter<ITERATOR>::CalendarReverseIteratorAdapter(
 }
 
 // MANIPULATORS
-template <class ITERATOR>
-inline
-CalendarReverseIteratorAdapter<ITERATOR>&
-CalendarReverseIteratorAdapter<ITERATOR>::operator=(
-                                     const CalendarReverseIteratorAdapter& rhs)
-{
-    d_forwardIter = rhs.d_forwardIter;
-    return *this;
-}
-
 template <class ITERATOR>
 inline
 CalendarReverseIteratorAdapter<ITERATOR>&

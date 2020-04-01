@@ -108,6 +108,7 @@ BSLS_IDENT("$Id: $")
 
 #include <bsls_assert.h>
 #include <bsls_atomicoperations.h>
+#include <bsls_compilerfeatures.h>
 #include <bsls_review.h>
 #include <bsls_types.h>
 
@@ -321,8 +322,17 @@ class CategoryHolder {
 
     // CREATORS
 
-    // No constructors or destructors are declared in order to allow for static
-    // initialization of instances of this class.
+    // No user-defined constructors or destructors are declared in order to
+    // allow for static initialization of instances of this class.
+
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    CategoryHolder() = default;
+    CategoryHolder(const CategoryHolder& original) = default;
+	// Create an 'CategoryHolder' object having the same value as the
+	// specified 'original' object.  Note that the implicit declaration of
+	// this constructor is deprecated in C++11 due to the deleted private
+	// copy-assignment operator.
+#endif
 
     // MANIPULATORS
     void reset();

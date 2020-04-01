@@ -149,58 +149,28 @@ void aSsErT(bool b, const char *s, int i)
 
 }  // close unnamed namespace
 
-# define ASSERT(X) { aSsErT(!(X), #X, __LINE__); }
-
-// ============================================================================
-//                  STANDARD BDE LOOP-ASSERT TEST MACROS
-// ----------------------------------------------------------------------------
-
-# define LOOP_ASSERT(I,X) { \
-    if (!(X)) { P(I); aSsErT(!(X), #X, __LINE__); } }
-
-# define LOOP2_ASSERT(I,J,X) { \
-    if (!(X)) { P_(I) P(J);   \
-                aSsErT(!(X), #X, __LINE__); } }
-
-#define LOOP3_ASSERT(I,J,K,X) { \
-    if (!(X)) { P_(I) P_(J) P(K) \
-                aSsErT(!(X), #X, __LINE__); } }
-
-#define LOOP4_ASSERT(I,J,K,L,X) { \
-    if (!(X)) { P_(I) P_(J) P_(K) P(L)\
-                aSsErT(!(X), #X, __LINE__); } }
-
-#define LOOP5_ASSERT(I,J,K,L,M,X) { \
-    if (!(X)) { P_(I) P_(J) P_(K) P_(L) P(M)\
-                aSsErT(!(X), #X, __LINE__); } }
-
-#define LOOP6_ASSERT(I,J,K,L,M,N,X) { \
-    if (!(X)) { P_(I) P_(J) P_(K) P_(L) P_(M) P(N)\
-                aSsErT(!(X), #X, __LINE__); } }
-
-#define LOOP0_ASSERT ASSERT
-#define LOOP1_ASSERT LOOP_ASSERT
-
 //=============================================================================
-//                  STANDARD BDE VARIADIC ASSERT TEST MACROS
+//                       STANDARD BDE TEST DRIVER MACROS
 //-----------------------------------------------------------------------------
 
-#define NUM_ARGS_IMPL(X5, X4, X3, X2, X1, X0, N, ...)   N
-#define NUM_ARGS(...) NUM_ARGS_IMPL(__VA_ARGS__, 5, 4, 3, 2, 1, 0, "")
+#define ASSERT       BSLS_BSLTESTUTIL_ASSERT
+#define LOOP_ASSERT  BSLS_BSLTESTUTIL_LOOP_ASSERT
+#define LOOP0_ASSERT BSLS_BSLTESTUTIL_LOOP0_ASSERT
+#define LOOP1_ASSERT BSLS_BSLTESTUTIL_LOOP1_ASSERT
+#define LOOP2_ASSERT BSLS_BSLTESTUTIL_LOOP2_ASSERT
+#define LOOP3_ASSERT BSLS_BSLTESTUTIL_LOOP3_ASSERT
+#define LOOP4_ASSERT BSLS_BSLTESTUTIL_LOOP4_ASSERT
+#define LOOP5_ASSERT BSLS_BSLTESTUTIL_LOOP5_ASSERT
+#define LOOP6_ASSERT BSLS_BSLTESTUTIL_LOOP6_ASSERT
+#define ASSERTV      BSLS_BSLTESTUTIL_ASSERTV
 
-#define LOOPN_ASSERT_IMPL(N, ...) LOOP ## N ## _ASSERT(__VA_ARGS__)
-#define LOOPN_ASSERT(N, ...)      LOOPN_ASSERT_IMPL(N, __VA_ARGS__)
+#define Q   BSLS_BSLTESTUTIL_Q   // Quote identifier literally.
+#define P   BSLS_BSLTESTUTIL_P   // Print identifier and value.
+#define P_  BSLS_BSLTESTUTIL_P_  // P(X) without '\n'.
+#define T_  BSLS_BSLTESTUTIL_T_  // Print a tab (w/o newline).
+#define L_  BSLS_BSLTESTUTIL_L_  // current Line number
 
-#define ASSERTV(...) LOOPN_ASSERT(NUM_ARGS(__VA_ARGS__), __VA_ARGS__)
-
-//=============================================================================
-//                  SEMI-STANDARD TEST OUTPUT MACROS
-//-----------------------------------------------------------------------------
-#define Q(X) printf("<| " #X " |>\n");      // Quote identifier literally.
-#define P(X) dbg_print(#X " = ", X, "\n");  // Print identifier and value.
-#define P_(X) dbg_print(#X " = ", X, ", "); // P(X) without '\n'
-#define L_ __LINE__                         // current Line number
-#define T_ putchar('\t');                   // Print a tab (w/o newline)
+#define RUN_EACH_TYPE BSLTF_TEMPLATETESTFACILITY_RUN_EACH_TYPE
 
 // ============================================================================
 //                  NEGATIVE-TEST MACRO ABBREVIATIONS
@@ -304,9 +274,6 @@ int NUM_SPECIAL_INT_VALUES     =
 //                  GLOBAL HELPER FUNCTIONS FOR TESTING
 //-----------------------------------------------------------------------------
 
-#define RUN_EACH_TYPE BSLTF_TEMPLATETESTFACILITY_RUN_EACH_TYPE
-//#define TEST_TYPES_REGULAR BSLTF_TEMPLATETESTFACILITY_TEST_TYPES_REGULAR
-
 #ifndef BSLS_PLATFORM_OS_WINDOWS
 # define TEST_TYPES_REGULAR                                                   \
         signed char,                                                          \
@@ -334,68 +301,27 @@ int NUM_SPECIAL_INT_VALUES     =
         bsltf::NonTypicalOverloadsTestType
 #endif
 
+namespace bsl {
 
-// Fundamental-type-specific print functions.
-inline void dbg_print(bool b) { printf(b ? "true" : "false"); fflush(stdout); }
-inline void dbg_print(char c) { printf("%c", c); fflush(stdout); }
-inline void dbg_print(unsigned char c) { printf("%c", c); fflush(stdout); }
-inline void dbg_print(signed char c) { printf("%c", c); fflush(stdout); }
-inline void dbg_print(short val) { printf("%d", (int)val); fflush(stdout); }
-inline void dbg_print(unsigned short val) {
-    printf("%d", (int)val);
-    fflush(stdout);
-}
-inline void dbg_print(int val) { printf("%d", val); fflush(stdout); }
-inline void dbg_print(unsigned int val) { printf("%u", val); fflush(stdout); }
-inline void dbg_print(long val) { printf("%ld", val); fflush(stdout); }
-inline void dbg_print(unsigned long val) {
-    printf("%lu", val);
-    fflush(stdout);
-}
-inline void dbg_print(long long val) { printf("%lld", val); fflush(stdout); }
-inline void dbg_print(unsigned long long val) {
-    printf("%llu", val);
-    fflush(stdout);
-}
-inline void dbg_print(float val) {
-    printf("'%f'", (double)val);
-    fflush(stdout);
-}
-inline void dbg_print(double val) { printf("'%f'", val); fflush(stdout); }
-inline void dbg_print(long double val) {
-    printf("'%Lf'", val);
-    fflush(stdout);
-}
-inline void dbg_print(const char* s) { printf("\"%s\"", s); fflush(stdout); }
-inline void dbg_print(char* s) { printf("\"%s\"", s); fflush(stdout); }
-inline void dbg_print(void* p) { printf("%p", p); fflush(stdout); }
-
-// 'queue' specific print function
-
+// 'queue' specific print function.
 template <class VALUE, class CONTAINER>
-void dbg_print(const bsl::queue<VALUE, CONTAINER>& q)
+void debugprint(const bsl::queue<VALUE, CONTAINER>& q)
 {
     if (q.empty()) {
         printf("<empty>");
     }
     else {
         printf("size: %d, front: ", (int) q.size());
-        dbg_print(static_cast<char>(
+        bsls::BslTestUtil::callDebugprint(static_cast<char>(
                        bsltf::TemplateTestFacility::getIdentifier(q.front())));
         printf(", back: ");
-        dbg_print(static_cast<char>(
+        bsls::BslTestUtil::callDebugprint(static_cast<char>(
                         bsltf::TemplateTestFacility::getIdentifier(q.back())));
     }
     fflush(stdout);
 }
 
-// generic debug print function (3-arguments)
-template <class T>
-void dbg_print(const char* s, const T& val, const char* nl) {
-    printf("%s", s); dbg_print(val);
-    printf("%s", nl);
-    fflush(stdout);
-}
+}  // close namespace bsl
 
                             // =======================
                             // class NonAllocContainer
@@ -416,6 +342,10 @@ class NonAllocContainer {
 
     // CREATORS
     NonAllocContainer() : d_deque(&bslma::MallocFreeAllocator::singleton()) {}
+
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    NonAllocContainer(const NonAllocContainer& other) = default;
+#endif
 
     ~NonAllocContainer() {}
 
@@ -2401,7 +2331,7 @@ void TestDriver<VALUE, CONTAINER>::testCase19MoveOnlyType()
     }
 
     ASSERT( is_special_container);
-    ASSERT(!is_copy_constructible)
+    ASSERT(!is_copy_constructible);
 
     if (verbose) { printf("Movable 'push'"); }
     {
@@ -2420,8 +2350,8 @@ void TestDriver<VALUE, CONTAINER>::testCase19MoveOnlyType()
             mX.push(MoveUtil::move(VALUE(i)));
             ASSERT(isCalledMethodCheckPassed<CONTAINER>(expectedPushMethod));
 
-            ASSERT(value0   == X.front())
-            ASSERT(VALUE(i) == X.back())
+            ASSERT(value0   == X.front());
+            ASSERT(VALUE(i) == X.back());
         }
     }
 
@@ -2522,7 +2452,7 @@ void TestDriver<VALUE, CONTAINER>::testCase19MoveOnlyType()
                 addressOfResult = bsls::Util::addressOf(result);
               } break;
               default:
-                  ASSERT(!"'value' not in range '[0, k_MAX_NUM_PARAMS]'")
+                  ASSERT(!"'value' not in range '[0, k_MAX_NUM_PARAMS]'");
             }
             ASSERTV(
                    numArgs,
@@ -2587,7 +2517,7 @@ void TestDriver<VALUE, CONTAINER>::testCase18MoveOnlyType()
     }
 
     ASSERT( is_special_container);
-    ASSERT(!is_copy_constructible)
+    ASSERT(!is_copy_constructible);
 
     {
         const int NUM_DATA                     = DEFAULT_NUM_DATA;
@@ -2735,7 +2665,7 @@ void TestDriver<VALUE, CONTAINER>::
         "BC",
         "CDE",
     };
-    const int NUM_SPECS = static_cast<const int>(sizeof SPECS / sizeof *SPECS);
+    const int NUM_SPECS = static_cast<int>(sizeof SPECS / sizeof *SPECS);
 
     bslma::TestAllocator da("default", veryVeryVeryVerbose);
     bslma::DefaultAllocatorGuard dag(&da);
@@ -3091,7 +3021,7 @@ void TestDriver<VALUE, CONTAINER>::testCase19(bool isMovableContainer)
                 addressOfResult = bsls::Util::addressOf(result);
               } break;
               default:
-                  ASSERT(!"'value' not in range '[0, k_MAX_NUM_PARAMS]'")
+                  ASSERT(!"'value' not in range '[0, k_MAX_NUM_PARAMS]'");
             }
             ASSERTV(
                    numArgs,
@@ -3929,7 +3859,7 @@ void TestDriver<VALUE, CONTAINER>::
         "BC",
         "CDE",
     };
-    const int NUM_SPECS = static_cast<const int>(sizeof SPECS / sizeof *SPECS);
+    const int NUM_SPECS = static_cast<int>(sizeof SPECS / sizeof *SPECS);
 
     bslma::TestAllocator da("default", veryVeryVeryVerbose);
     bslma::DefaultAllocatorGuard dag(&da);
@@ -4337,7 +4267,7 @@ void TestDriver<VALUE, CONTAINER>::
         "BC",
         "CDE",
     };
-    const int NUM_SPECS = static_cast<const int>(sizeof SPECS / sizeof *SPECS);
+    const int NUM_SPECS = static_cast<int>(sizeof SPECS / sizeof *SPECS);
 
     bslma::TestAllocator da("default", veryVeryVeryVerbose);
     bslma::DefaultAllocatorGuard dag(&da);
@@ -4838,7 +4768,7 @@ void TestDriver<VALUE, CONTAINER>::
         "BC",
         "CDE",
     };
-    const int NUM_SPECS = static_cast<const int>(sizeof SPECS / sizeof *SPECS);
+    const int NUM_SPECS = static_cast<int>(sizeof SPECS / sizeof *SPECS);
 
     for (int ti = 0; ti < NUM_SPECS; ++ti) {
         const char *const SPEC   = SPECS[ti];
@@ -4973,8 +4903,7 @@ void TestDriver<VALUE, CONTAINER>::
             "BC",
             "CDE",
         };
-        const int NUM_SPECS =
-                          static_cast<const int>(sizeof SPECS / sizeof *SPECS);
+        const int NUM_SPECS = static_cast<int>(sizeof SPECS / sizeof *SPECS);
 
         for (int ti = 0; ti < NUM_SPECS; ++ti) {
             const char *const SPEC   = SPECS[ti];

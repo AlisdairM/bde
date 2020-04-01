@@ -131,6 +131,7 @@ BSLS_IDENT("$Id: $")
 #include <bslmf_nestedtraitdeclaration.h>
 
 #include <bsls_assert.h>
+#include <bsls_compilerfeatures.h>
 #include <bsls_review.h>
 
 #include <bsl_iosfwd.h>
@@ -288,7 +289,9 @@ class IndexClerk {
 
     // MANIPULATORS
 
-    // !IndexClerk& operator=(const IndexClerk& rhs);
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    IndexClerk& operator=(const IndexClerk& rhs) = default;
+#endif
         // Assign to this index clerk the value of the specified 'rhs' index
         // clerk, and return a reference to this modifiable index clerk.  Note
         // that this method's definition is compiler generated.

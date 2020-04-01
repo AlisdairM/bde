@@ -1379,6 +1379,11 @@ class BitwiseMoveableTestTypeAlloc : public TestTypeAlloc {
     : TestTypeAlloc(original, ba)
     {
     }
+
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    BitwiseMoveableTestTypeAlloc&
+    operator=(const BitwiseMoveableTestTypeAlloc& original) = default;
+#endif  
 };
 
                        // ====================================
@@ -1415,6 +1420,11 @@ class BitwiseCopyableTestTypeNoAlloc : public SmallTestTypeNoAlloc {
     : SmallTestTypeNoAlloc(original.value())
     {
     }
+
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    BitwiseCopyableTestTypeNoAlloc&
+    operator=(const BitwiseCopyableTestTypeNoAlloc& original) = default;
+#endif
 };
 
                                // ==============

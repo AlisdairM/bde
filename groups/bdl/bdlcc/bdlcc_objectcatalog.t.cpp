@@ -29,6 +29,7 @@
 #include <bsls_alignmentfromtype.h>
 #include <bsls_alignmentutil.h>
 #include <bsls_assert.h>
+#include <bsls_compilerfeatures.h>
 #include <bsls_nameof.h>
 #include <bsls_review.h>
 #include <bsls_types.h>
@@ -2392,6 +2393,10 @@ class Pattern {
     }
 
     // MANIPULATORS
+ #if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
+    Pattern& operator=(const Pattern& rhs) = default;
+#endif
+
     void setPattern(int pattern)
     {
         d_pattern = pattern;
