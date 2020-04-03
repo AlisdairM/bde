@@ -510,9 +510,11 @@ int main(int argc, char *argv[])
             LOOP_ASSERT(bsls::AlignmentImpPriorityToType<5>::Type(),
                         sameType(bsls::AlignmentImpPriorityToType<5>::Type(),
                                  V));
+#if __cplusplus <= 201703L
             LOOP_ASSERT(bsls::AlignmentImpPriorityToType<6>::Type(),
                         sameType(bsls::AlignmentImpPriorityToType<6>::Type(),
                                  wchar_t()));
+#endif
             LOOP_ASSERT(bsls::AlignmentImpPriorityToType<7>::Type(),
                         sameType(bsls::AlignmentImpPriorityToType<7>::Type(),
                                  bool()));

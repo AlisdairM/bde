@@ -52,3 +52,6 @@ TAGS
 *.VC.db-wal
 *.ipch
 .vs/
+
+# macOS system files
+.DS_Store

@@ -293,7 +293,7 @@ class CategoryHolder {
     // implementation detail of the 'ball' logging system.
 
     // NOT IMPLEMENTED
-    CategoryHolder& operator=(const CategoryHolder&);
+    CategoryHolder& operator=(const CategoryHolder&) BSLS_KEYWORD_DELETED;
 
     typedef bsls::AtomicOperations                       AtomicOps;
     typedef bsls::AtomicOperations::AtomicTypes::Int     AtomicInt;
@@ -324,15 +324,6 @@ class CategoryHolder {
 
     // No user-defined constructors or destructors are declared in order to
     // allow for static initialization of instances of this class.
-
-#if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
-    CategoryHolder() = default;
-    CategoryHolder(const CategoryHolder& original) = default;
-	// Create an 'CategoryHolder' object having the same value as the
-	// specified 'original' object.  Note that the implicit declaration of
-	// this constructor is deprecated in C++11 due to the deleted private
-	// copy-assignment operator.
-#endif
 
     // MANIPULATORS
     void reset();

@@ -15748,7 +15748,7 @@ int main(int argc, char *argv[])
                 long double    SPEC   = DATA[ti].d_spec;
 
                 if (veryVeryVerbose) {
-                    printf("\tPOS: " ZU ", SPEC: \"%g\"\n", POS, SPEC);
+                    printf("\tPOS: " ZU ", SPEC: \"%Lg\"\n", POS, SPEC);
                 }
 
                 const bsl::wstring      inV(INPUT);

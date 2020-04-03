@@ -1383,7 +1383,7 @@ class BitwiseMoveableTestTypeAlloc : public TestTypeAlloc {
 #if defined(BSLS_COMPILERFEATURES_SUPPORT_DEFAULTED_FUNCTIONS)
     BitwiseMoveableTestTypeAlloc&
     operator=(const BitwiseMoveableTestTypeAlloc& original) = default;
-#endif  
+#endif
 };
 
                        // ====================================
@@ -3638,7 +3638,7 @@ void TestDriver<TYPE,ALLOC>::testCase6()
                                                                 // same lengths
 
                 if (U_LENGTH != oldLen) {
-                    if (verbose) printf( 
+                    if (verbose) printf(
                               "\tUsing lhs objects of length %d.\n", U_LENGTH);
                     LOOP_ASSERT(U_SPEC, oldLen <= U_LENGTH);  //non-decreasing
                     oldLen = U_LENGTH;

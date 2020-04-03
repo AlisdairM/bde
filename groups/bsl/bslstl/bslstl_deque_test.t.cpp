@@ -815,7 +815,7 @@ class TestTypeAlloc {
         }
         return *this;
     }
-        
+
     TestTypeAlloc& operator=(bslmf::MovableRef<TestTypeAlloc> rhs)
     {
         TestTypeAlloc& local = rhs;
@@ -1425,6 +1425,13 @@ class LimitAllocator : public ALLOC {
 
     explicit
     LimitAllocator(const ALLOC& alloc)
+    : AllocBase((const AllocBase&)alloc)
+    , d_limit(-1)
+    {
+    }
+
+    template <class OTHER_ALLOC>
+    LimitAllocator(const LimitAllocator<OTHER_ALLOC>& alloc)
     : AllocBase((const AllocBase&)alloc)
     , d_limit(-1)
     {
@@ -6811,9 +6818,9 @@ void TestDriver<TYPE,ALLOC>::testCase25_dispatch()
                     typename Obj::const_iterator exp =
                              k_IS_WELL_BEHAVED && e_STATEFUL != s_allocCategory
                                                          ? X.begin() : X.end();
-                    typename Obj::const_iterator result = 
+                    typename Obj::const_iterator result =
                        TstMoveUtil::findFirstNotMovedInto(X.begin(), X.end());
-                                        
+
                     ASSERTV(SPEC1, SPEC2, result - X.begin(), NameOf<TYPE>(),
                                             allocCategoryAsStr(), result - exp,
                                                                 exp == result);
@@ -7129,7 +7136,7 @@ void TestDriver<TYPE,ALLOC>::testCase24()
                     // 1. each element in original move-inserted
                     typename Obj::const_iterator exp =
                                        k_IS_WELL_BEHAVED ? X.begin() : X.end();
-                                        
+
                     ASSERTV(SPEC, CONFIG, exp ==
                        TstMoveUtil::findFirstNotMovedInto(X.begin(), X.end()));
 
