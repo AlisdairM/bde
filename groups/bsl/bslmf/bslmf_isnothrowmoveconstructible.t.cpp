@@ -659,12 +659,63 @@ int main(int argc, char *argv[])
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(volatile void,       false);
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(const volatile void, false);
 
-        // Pointers to void are perfectly good object types:
+        // Pointers to cv-'void' are regular object types though, until C++20
+        // aggregate initialization rules make arrays of 'const void *' also
+        // nothrow move constructible (but no other array types, except bool?)
+        // as array-to-pointer decay for an array of 'const void *' yields a
+        // pointer type that is compatible with the element type of the array
+        // itself, `const void *`.  Hence, move construction of an array of
+        // 'const void *' is an array of the same size, where the first element
+        // is the address of the original array and all the other elements are
+        // null pointers:
+#if defined(__cpp_aggregate_paren_init)
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(void *,        true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(void **,       true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(void *              [128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(void *const         [128], false );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(void *      volatile[128], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(void *const volatile[128], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *[12][8], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *[],      false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *[][8],   false);
+
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *,        true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void **,       true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const void *              [128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const void *const         [128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const void *      volatile[128], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const void *const volatile[128], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *[12][8], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *[],      false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const          void *[][8],   false);
+
+
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(volatile void *,        true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(volatile void **,       true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(volatile void *              [128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(volatile void *const         [128], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(volatile void *      volatile[128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(volatile void *const volatile[128], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(volatile void *[12][8], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(volatile void *[],      false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(volatile void *[][8],   false);
+
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const volatile void *,        true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const volatile void **,       true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const volatile void *              [128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const volatile void *const         [128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const volatile void *      volatile[128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(const volatile void *const volatile[128], true );
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const volatile void *[12][8], false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const volatile void *[],      false);
+    ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_CV_TYPE(const volatile void *[][8],   false);
+#else
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_OBJECT_TYPE(void*,          true);
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_OBJECT_TYPE(const void*,    true);
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_OBJECT_TYPE(volatile void*, true);
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_OBJECT_TYPE(const volatile void*,
                                                                          true);
+#endif
 
         // C-5 : Function types are not object types, nor cv-qualifiable.
         ASSERT_IS_NOTHROW_MOVE_CONSTRUCTIBLE_TYPE(void(),               false);

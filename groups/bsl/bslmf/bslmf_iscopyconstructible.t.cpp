@@ -229,6 +229,9 @@ enum class EnumClassType {
 };
 #endif
 
+typedef int UserDefinedCopyableTestType::*DataMemberPtrTestType;
+    // This pointer to instance data member type is used for testing.
+
 typedef int (UserDefinedCopyableTestType::*MethodPtrTestType) ();
     // This pointer to non-static function member type is used for testing.
 
@@ -470,7 +473,12 @@ int main(int argc, char *argv[])
         // C-1
         ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(int,  true);
         ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(char, true);
-        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(long double, true);
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(int,  true);
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(long double,    true);
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(bsl::nullptr_t, true);
+#if defined(BSLS_COMPILERFEATURES_SUPPORT_UNICODE_CHAR_TYPES)
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(char16_t,       true);
+#endif
 
         // C-2
         ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(EnumTestType, true);
@@ -479,7 +487,8 @@ int main(int argc, char *argv[])
 #endif
 
         // C-3
-        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(MethodPtrTestType, true);
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(DataMemberPtrTestType, true);
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(MethodPtrTestType,     true);
 
         // C-4 : 'void' is not an object type, but can be cv-qualified.
         ASSERT_IS_COPY_CONSTRUCTIBLE(               void, false);
@@ -487,11 +496,40 @@ int main(int argc, char *argv[])
         ASSERT_IS_COPY_CONSTRUCTIBLE(      volatile void, false);
         ASSERT_IS_COPY_CONSTRUCTIBLE(const volatile void, false);
 
-        // Pointers to cv-'void' are regular object types though.
+        // Pointers to cv-'void' are regular object types though, until C++20
+        // aggregate initialization rules make arrays of 'const void *' also
+        // copy constructible (but no other array types), as array-to-pointer
+        // decay for an array of 'const void *' yields a pointer type that is
+        // compatible with the element type of the array itself,
+        // `const void *`.  Hence, a copy of an array of 'const void *' is an
+        // array of the same size, where the first element is the address of
+        // the original array and all the other elements are null pointers:
         ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(               void *, true);
-        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(const          void *, true);
         ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(      volatile void *, true);
+#if !defined(__cpp_aggregate_paren_init)
+        ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(const          void *, true);
         ASSERT_IS_COPY_CONSTRUCTIBLE_OBJECT_TYPE(const volatile void *, true);
+#else
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const          void *,        true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const          void **,       true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const void *              [128], true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const void *const         [128], true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const void *      volatile[128], false);
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const void *const volatile[128], false);
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const          void *[12][8], false);
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const          void *[],      false);
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const          void *[][8],   false);
+
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const volatile void *,        true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const volatile void **,       true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const volatile void *              [128], true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const volatile void *const         [128], true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const volatile void *      volatile[128], true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_TYPE(const volatile void *const volatile[128], true );
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const volatile void *[12][8], false);
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const volatile void *[],      false);
+    ASSERT_IS_COPY_CONSTRUCTIBLE_CV_TYPE(const volatile void *[][8],   false);
+#endif
 
         // C-5 : Function types are not object types, nor cv-qualifiable.
         typedef void SimpleFunction();
